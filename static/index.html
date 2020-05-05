@@ -5,6 +5,7 @@
 <script src="opencv.js"></script>
 <script src="opencv_processing.js"></script>
 <body>
+  <p id="message"></p><br>
   <input id="input" type="file">
   <button onclick="load_model()">load model</button>
   <button id='predict' onclick="predict()" >predict</button>
@@ -55,6 +56,7 @@
      scal=tf.scalar(1/255,'float32');
      x=tf.mul(x,scal);
      x.print();
+     get_max_input_value(x);
      x=tf.expandDims(x,0);
      function draw(y){
      y=tf.squeeze(y,0);
@@ -68,6 +70,9 @@
      calculate(x,draw);
 
   }
-
+  function get_max_input_value(x){
+    max_value=tf.max(x)
+    document.getElementById("message").innerHTML=max_value.toString();
+  }
   </script>
 </body>
