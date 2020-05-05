@@ -56,10 +56,11 @@
      scal=tf.scalar(1/255,'float32');
      x=tf.mul(x,scal);
      x.print();
-     get_max_input_value(x);
+
      x=tf.expandDims(x,0);
      function draw(y){
      y=tf.squeeze(y,0);
+     get_max_input_value(y);
      tf.browser.toPixels(y,document.getElementById('output'));
      document.getElementById('opencv').style.visibility='visible';
      }
