@@ -55,15 +55,15 @@
      let x = tf.browser.fromPixels(document.getElementById('original')).asType('float32');
      scal=tf.scalar(1/255,'float32');
      x=tf.mul(x,scal);
-     x.print();
+     //x.print();
 
      x=tf.expandDims(x,0);
      function draw(y){
      y=tf.squeeze(y,0);
-
-     scal=tf.max(y)
-     y=tf.div(y,scal);
-     get_max_input_value(y);
+     y.print()
+     //scal=tf.max(y)
+     //y=tf.div(y,scal);
+     //get_max_value(y);
      tf.browser.toPixels(y,document.getElementById('output'));
      document.getElementById('opencv').style.visibility='visible';
      }
@@ -74,7 +74,7 @@
      calculate(x,draw);
 
   }
-  function get_max_input_value(x){
+  function get_max_value(x){
     max_value=tf.max(x)
     document.getElementById("message").innerHTML=max_value.toString();
   }
