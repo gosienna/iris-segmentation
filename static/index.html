@@ -61,8 +61,8 @@
      function draw(y){
      y=tf.squeeze(y,0);
 
-     scal=tf.scalar(255,'float32');
-     y=tf.mul(y,scal);
+     scal=tf.max(y)
+     y=tf.div(y,scal);
      get_max_input_value(y);
      tf.browser.toPixels(y,document.getElementById('output'));
      document.getElementById('opencv').style.visibility='visible';
