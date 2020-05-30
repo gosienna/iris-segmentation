@@ -1,0 +1,70 @@
+<!doctype html>
+<head>
+</head>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.7.2"></script>
+<script src="opencv.js"></script>
+<script src="opencv_processing.js"></script>
+<script src="find.js"></script>
+<script src="circlefit.js"></script>
+<body>
+  <input id="input" type="file">
+  <button onclick="load_model()">load model</button>
+  <button id='predict' onclick="predict()" >predict</button>
+  <button id='find-edge' onclick='opencv()'>find edge</button>
+  <button id='circle-fit' onclick='find()'>fit circle</button><br>
+  <img id='original' width="300" height="200" >
+  <canvas id="output" width="300" height="200"></canvas>
+  <canvas id="iris" width="300" height="200"></canvas>
+  <canvas id="final" width="300" height="200"></canvas><br>
+  Instructions:
+  <ol>
+  </ol>
+  Notes:
+  <ol>
+  </ol>
+  <script>
+  let model;
+   //set predict and find iris buttons hidden
+  document.getElementById('predict').style.visibility='hidden'
+  document.getElementById('find-edge').style.visibility='hidden'
+  document.getElementById('circle-fit').style.visibility='hidden'
+  //load input image
+  let inputElement=document.getElementById('input')
+  inputElement.onchange = function() {
+                          imgElement=document.getElementById('original')
+                          imgElement.src = URL.createObjectURL(event.target.files[0]);
+                          }
+
+  function load_model(){
+     function show_predict_button(){
+       console.log(document.getElementById('predict').style.visibility)
+       document.getElementById('predict').style.visibility='visible';
+
+     }
+     async function load(show_predict_button){ //use callback function, show predict button when model loading is completed
+       model = await tf.loadLayersModel('../model/model.json');
+       console.log('model loading success!')
+       show_predict_button()
+     }
+     load(show_predict_button);
+  }
+
+  async function predict(){
+        let x = tf.browser.fromPixels(document.getElementById('original')).asType('float32');
+        scal=tf.scalar(1/255,'float32');
+        x=tf.mul(x,scal);
+        x=tf.expandDims(x,0);
+        function draw(y){
+                 y=tf.squeeze(y,0);
+                 y.print()
+                 tf.browser.toPixels(y,document.getElementById('output'));
+                 document.getElementById('find-edge').style.visibility='visible';
+        }
+        async function calculate(x,draw){
+              y=await model.predict(x);
+              draw(y)
+        }
+        calculate(x,draw);
+  }
+  </script>
+</body>

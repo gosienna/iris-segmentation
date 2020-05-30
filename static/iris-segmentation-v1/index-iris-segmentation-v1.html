@@ -1,0 +1,77 @@
+<!doctype html>
+<head>
+</head>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.7.2"></script>
+<script src="opencv.js"></script>
+<script src="opencv_processing.js"></script>
+<body>
+  <input id="input" type="file">
+  <button onclick="load_model()">load model</button>
+  <button id='predict' onclick="predict()" >predict</button>
+  <button id='opencv' onclick='opencv()'>find iris</button><br>
+  <img id='original' width="300" height="200" >
+  <canvas id="output" width="300" height="200"></canvas>
+  <canvas id="iris" width="300" height="200"></canvas><br>
+  Instructions:
+  <ol>
+    <li>step1 load model: choose image from your device and press "load model" button</li>
+    <li>step2 make prediction: wait for around 10-30 sec for the model to load.<br>
+        When the model is ready, another button "predict" should appear.<br>
+        Wait for 3-5 sec for the model to run.</li>
+    <li>step3 find iris: Press the "find iris button" to outline the iris.</li>
+  </ol>
+  Notes:
+  <ol>
+    <li>The model used to find the iris is based on "U-net", using tensorflow.js framework.</li>
+    <li>Ideal input image should have a ratio of width and height to be around 3:2.</li>
+    <li>The circle fitting method is based on function "minEnclosingCircle" provided by opencv 2.0<br>
+        It didn't work very well when the eyelid cover over the center of the eye.
+    <li>This web app can't work on mobil browser due to the limitation of webgl mobile device can provided.</li>
+  </ol>
+  <script>
+  let model;
+   //set predict and find iris buttons hidden
+  document.getElementById('predict').style.visibility='hidden'
+  document.getElementById('opencv').style.visibility='hidden'
+  //load input image
+  let inputElement=document.getElementById('input')
+  inputElement.onchange = function() {
+                          imgElement=document.getElementById('original')
+                          imgElement.src = URL.createObjectURL(event.target.files[0]);
+                          }
+
+  function load_model(){
+     function show_predict_button(){
+       console.log(document.getElementById('predict').style.visibility)
+       document.getElementById('predict').style.visibility='visible';
+
+     }
+     async function load(show_predict_button){ //use callback function, show predict button when model loading is completed
+       model = await tf.loadLayersModel('../model/model.json');
+       console.log('model loading success!')
+       show_predict_button()
+     }
+     load(show_predict_button);
+  }
+
+  async function predict(){
+     let x = tf.browser.fromPixels(document.getElementById('original')).asType('float32');
+     scal=tf.scalar(1/255,'float32');
+     x=tf.mul(x,scal);
+     //x.print();
+
+     x=tf.expandDims(x,0);
+     function draw(y){
+     y=tf.squeeze(y,0);
+     y.print()
+     tf.browser.toPixels(y,document.getElementById('output'));
+     document.getElementById('opencv').style.visibility='visible';
+     }
+     async function calculate(x,draw){
+        y=await model.predict(x);
+        draw(y)
+     }
+     calculate(x,draw);
+  }
+  </script>
+</body>
