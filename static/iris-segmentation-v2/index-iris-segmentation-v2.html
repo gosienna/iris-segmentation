@@ -18,9 +18,17 @@
   <canvas id="final" width="300" height="200"></canvas><br>
   Instructions:
   <ol>
+    <li>step1 load model: choose image from your device and press "load model" button</li>
+    <li>step2 make prediction: wait for around 10-30 sec for the model to load.<br>
+        When the model is ready, another button "predict" should appear.<br>
+        Wait for 3-5 sec for the model to run.</li>
+    <li>step3 find iris: Press the "find edge" to outline the iris.</li>
+    <li>step4 fit circle: Press the "fit circle" to find the iris and calculate MRD as percentage to the radius</li>
   </ol>
   Notes:
   <ol>
+    <li>The model used to find the iris is based on "U-net", using tensorflow.js framework.</li>
+    <li>Ratio for input image should be around 3:2</li>
   </ol>
   <script>
   let model;
