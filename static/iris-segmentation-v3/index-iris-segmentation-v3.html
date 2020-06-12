@@ -1,0 +1,116 @@
+<!doctype html>
+<head>
+  <style>
+    canvas{
+      background-color: black;
+    }
+  </style>
+</head>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.7.2"></script>
+<script src="opencv.js"></script>
+<script src="opencv_processing.js"></script>
+<script src="eye_ruler_extract.js"></script>
+<script src="extract_diameter.js"></script>
+<script src="find.js"></script>
+<script src="circlefit.js"></script>
+<body>
+  <a>Load Image and Select Eye/Ruler</a><br>
+  <input id="input" type="file">
+
+  <canvas id="face"></canvas><br>
+  <canvas id="right" width="300" height="200" ></canvas>
+  <canvas id="circle" width="300" height="200"></canvas>
+  <canvas id="left"  width="300" height="200"></canvas><br>
+
+
+
+  <a>Processing</a><br>
+  <!--buttons-->
+  <button onclick="load_model()">load model</button>
+  <button id='predict' onclick="predict()" >predict</button>
+  <button id='find-edge' onclick='get_edge()'>find edge</button>
+  <button id='circle-fit' onclick='find()'>fit circle</button><br>
+
+  <!--calculated output-->
+  <canvas id="output-R" width="300" height="200"></canvas> <canvas id="red" width="300" height="200"></canvas> <canvas id="output-L" width="300" height="200"></canvas><br>
+  <canvas id="iris-R" width="300" height="200"></canvas> <canvas id="red2" width="300" height="200"></canvas> <canvas id="iris-L" width="300" height="200"></canvas><br>
+  <canvas id="final-R" width="300" height="200"></canvas> <canvas id="red3" width="300" height="200"></canvas> <canvas id="final-L" width="300" height="200"></canvas><br>
+  Instructions:
+  <ol>
+    <li>step1 load model: choose image from your device and press "load model" button</li>
+    <li>step2 make prediction: wait for around 10-30 sec for the model to load.<br>
+        When the model is ready, another button "predict" should appear.<br>
+        Wait for 3-5 sec for the model to run.</li>
+    <li>step3 find iris: Press the "find edge" to outline the iris.</li>
+    <li>step4 fit circle: Press the "fit circle" to find the iris and calculate MRD as percentage to the radius</li>
+  </ol>
+  Notes:
+  <ol>
+    <li>The model used to find the iris is based on "U-net", using tensorflow.js framework.</li>
+    <li>Ratio for input image should be around 3:2</li>
+  </ol>
+</body>
+<script>
+let model;
+var x=0; //use x,y to store cursor location over canvas
+var y=0;
+var window_s=0; //scale for window
+var s=0; //scare between imported image and displayed image over canvas
+var count_s=0; //index for counting snap sollection
+var img = new Image();
+var canvas = document.getElementById('face');
+
+ //set predict and find iris buttons hidden
+document.getElementById('predict').style.visibility='hidden'
+document.getElementById('find-edge').style.visibility='hidden'
+document.getElementById('circle-fit').style.visibility='hidden'
+
+//load input image and get eye and ruler
+let inputElement=document.getElementById('input')
+inputElement.onchange = function() {
+                        imgElement=document.getElementById('original')
+                        img.src = URL.createObjectURL(event.target.files[0]);
+                        img.onload = function() {  //call out script to load image and select eye ruler images
+                                     eye_ruler_extract();
+                                     }
+                        }
+
+function load_model(){
+   function show_predict_button(){
+     console.log(document.getElementById('predict').style.visibility)
+     document.getElementById('predict').style.visibility='visible';
+
+   }
+   async function load(show_predict_button){ //use callback function, show predict button when model loading is completed
+     model = await tf.loadLayersModel('../model/model.json');
+     console.log('model loading success!')
+     show_predict_button()
+   }
+   load(show_predict_button);
+}
+
+async function predict(){
+      compute('right','output-R');
+      compute('left','output-L');
+      document.getElementById('find-edge').style.visibility='visible';
+
+      function compute(source,output){
+            let x = tf.browser.fromPixels(document.getElementById(source)).asType('float32');
+            scal=tf.scalar(1/255,'float32');
+            x=tf.mul(x,scal);
+            x=tf.expandDims(x,0);
+            function draw(y){
+                     y=tf.squeeze(y,0);
+                     y.print()
+                     tf.browser.toPixels(y,document.getElementById(output));
+
+            }
+            async function calculate(x,draw){
+                  y=await model.predict(x);
+                  draw(y)
+            }
+            calculate(x,draw);
+      }
+
+}
+</script>
