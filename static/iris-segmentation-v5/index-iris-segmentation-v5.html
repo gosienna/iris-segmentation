@@ -1,0 +1,198 @@
+<!doctype html>
+<head>
+  <style>
+      #status{
+        animation: blink 1s infinite;
+      }
+      #status2{
+        visibility: hidden;
+        animation: blink 1s infinite;
+      }
+      @keyframes blink{
+        0%{opacity: 0;}
+        50%{opacity: 1;}
+        100%{opacity: 0;}
+      }
+      .hide{
+        visibility: hidden;
+      }
+
+  </style>
+
+</head>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<script src="add_event_window_capture.js"></script>
+<script src="add_event_marker_measurement.js"></script>
+<script src="predict.js"></script>
+<script src="opencv.js" ></script>
+<script src="get_edge.js"></script>
+<script src="find.js"></script>
+<script src="circlefit.js"></script>
+<body>
+    <!--canvas display the source-->
+    <div class="w3-center">
+      <p id="status">loading.....</p>
+    </div>
+    <div class="w3-center">
+      <input id="input" type="file">
+    </div>
+    <div class="w3-center" >
+        <canvas id="canvas-input" class="w3-round adjust-image"></canvas>
+
+    </div>
+
+    <!--buttons for adjusting capturing window size-->
+    <div class="w3-center">
+        <button style="width:30px" onclick="window_increase()"><b>+</b></button>
+        <button style="width:30px" onclick="window_decrease()"><b>-</b></button>
+    </div>
+
+    <!--canvases to show the captured eye and marker area-->
+    <div class="w3-center ">
+        <canvas id="left_eye" width="300", height="200" class="w3-round adjust-image"></canvas>
+        <canvas id="right_eye" width="300", height="200" class="w3-round adjust-image"></canvas>
+        <canvas id="marker" width="300", height="200" class="w3-round adjust-image"></canvas>
+    </div>
+    <div class="w3-center ">
+        <button class="hide" id="button_measure" style="width:100px" onclick="predict()"><b>Measure</b></button>
+    </div>
+    <div class="w3-center">
+      <p id="status2">processing.....</p>
+    </div>
+    <div class="w3-center ">
+        <canvas id="output_L" width="300", height="200" class="w3-round adjust-image"></canvas>
+        <canvas id="output_R" width="300", height="200" class="w3-round adjust-image"></canvas>
+    </div>
+    <div class="w3-center ">
+        <canvas id="edge_L" width="300", height="200" class="w3-round adjust-image"></canvas>
+        <canvas id="edge_R" width="300", height="200" class="w3-round adjust-image"></canvas>
+    </div>
+
+
+
+
+    <div class="w3-center ">
+        <canvas id="final_report" width="600", height="400" class="w3-round adjust-image"></canvas>
+    </div>
+
+</body>
+
+<!--script for initialization-->
+<script>
+
+  var img_original = new Image(); //create image variable as the input
+
+
+
+  //---------all width and height parameter--------
+        //input image raw data
+  var width_original_img;
+  var height_original_img;
+        //display for original image
+  var width_original_img_display; //modified width for display
+  var height_original_img_display;//modified height for display
+       //capture window
+  var width_capture_window=60;
+  var height_capture_window=40;
+
+  //variablec for operation
+  var c=document.getElementById("canvas-input")
+  var ctx=c.getContext('2d');
+
+  var c_L=document.getElementById("left_eye")
+  var ctx_L=c_L.getContext('2d');
+
+  var c_R=document.getElementById("right_eye")
+  var ctx_R=c_R.getContext('2d');
+
+  var c_M=document.getElementById("marker")
+  var ctx_M=c_M.getContext('2d');
+
+
+
+  var count=0;
+  var count_M=0;
+  var count_L=0;
+  var count_R=0;
+  var temp_r_L=0.0;
+  var temp_r_R=0.0;
+  var r=0.0;
+
+  //variable getting by manual measurement
+  var pixel_to_mm;
+  var mannual_r_R;
+  var mannual_r_L;
+  var x_p_L,y_p_L,x_p_R,y_p_R;//variable for drawing circle
+  var MRD_L=0.0;
+  var MRD_R=0.0;
+  var mannual_MRD_R=0.0;
+  var mannual_MRD_L=0.0;
+
+  var margin_L,margin_R;
+
+
+
+  var img_background
+  var img_marker_background
+  var img_left_background;
+  var img_right_background;
+
+
+  img_original.onload=function(){
+    width_original_img=this.naturalWidth;
+    height_original_img=this.naturalHeight;
+
+    width_img_display=300; //modified width for display
+    height_img_display=300*height_original_img/width_original_img; //modified height for display
+    //set the size of the image display canvas
+    //console.log(width_img_display);
+    c.width=width_img_display;
+    c.height=height_img_display;
+    ctx.drawImage(this,0,0,width_original_img,height_original_img,0,0,width_img_display,height_img_display);
+    img_background=ctx.getImageData(0,0,c.width,c.height);
+    add_event_window_capture(width_capture_window,height_capture_window);
+  }
+  //load putImageData
+  img_original.src="image_test02.jpg";
+
+  //load input image and get eye and ruler
+  let inputElement=document.getElementById('input')
+  inputElement.onchange = function() {
+                          //reload the img_original
+                          img_original.src = URL.createObjectURL(event.target.files[0]);
+
+                          }
+
+
+  function msg(){
+    var status=document.getElementById("status");
+    status.style.webkitAnimationPlayState = 'paused'
+    var status=document.getElementById("status");
+    status.innerHTML="complete!"
+  }
+
+  function msg2(){
+    var status=document.getElementById("status2");
+    status.style.webkitAnimationPlayState = 'paused'
+    var status=document.getElementById("status2");
+    status.innerHTML="complete!"
+  }
+
+
+  function window_increase(){
+    width_capture_window=width_capture_window*1.1;
+    height_capture_window=height_capture_window*1.1;
+
+  }
+
+  function window_decrease(){
+    width_capture_window=width_capture_window*0.9;
+    height_capture_window=height_capture_window*0.9;
+
+  }
+
+
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest" onload="msg()"> </script>
+<script src="loading.js"></script>
