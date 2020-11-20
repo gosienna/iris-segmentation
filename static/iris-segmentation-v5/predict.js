@@ -27,7 +27,8 @@ function predict(){
       }
       var message=document.getElementById("status2");
       message.style.visibility="visible";
+      //clear up canvas before drawing
+
       compute("left_eye","output_L","edge_L",img_left_background);
-      compute("right_eye","output_R","edge_R",img_right_background);
 
 }

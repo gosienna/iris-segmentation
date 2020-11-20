@@ -36,21 +36,23 @@
     <div class="w3-center">
       <input id="input" type="file">
     </div>
+    <div class="w3-center">
+        Adjust Window Size
+        <button id="btn_add" style="width:30px" onclick="window_increase()"><b>+</b></button>
+        <button id="btn_sub" style="width:30px" onclick="window_decrease()"><b>-</b></button>
+    </div>
     <div class="w3-center" >
         <canvas id="canvas-input" class="w3-round adjust-image"></canvas>
 
     </div>
 
     <!--buttons for adjusting capturing window size-->
-    <div class="w3-center">
-        <button style="width:30px" onclick="window_increase()"><b>+</b></button>
-        <button style="width:30px" onclick="window_decrease()"><b>-</b></button>
-    </div>
+
+
 
     <!--canvases to show the captured eye and marker area-->
     <div class="w3-center ">
         <canvas id="left_eye" width="300", height="200" class="w3-round adjust-image"></canvas>
-        <canvas id="right_eye" width="300", height="200" class="w3-round adjust-image"></canvas>
         <canvas id="marker" width="300", height="200" class="w3-round adjust-image"></canvas>
     </div>
     <div class="w3-center ">
@@ -61,15 +63,10 @@
     </div>
     <div class="w3-center ">
         <canvas id="output_L" width="300", height="200" class="w3-round adjust-image"></canvas>
-        <canvas id="output_R" width="300", height="200" class="w3-round adjust-image"></canvas>
     </div>
     <div class="w3-center ">
         <canvas id="edge_L" width="300", height="200" class="w3-round adjust-image"></canvas>
-        <canvas id="edge_R" width="300", height="200" class="w3-round adjust-image"></canvas>
     </div>
-
-
-
 
     <div class="w3-center ">
         <canvas id="final_report" width="600", height="400" class="w3-round adjust-image"></canvas>
@@ -81,6 +78,7 @@
 <script>
 
   var img_original = new Image(); //create image variable as the input
+
 
 
 
@@ -102,9 +100,6 @@
   var c_L=document.getElementById("left_eye")
   var ctx_L=c_L.getContext('2d');
 
-  var c_R=document.getElementById("right_eye")
-  var ctx_R=c_R.getContext('2d');
-
   var c_M=document.getElementById("marker")
   var ctx_M=c_M.getContext('2d');
 
@@ -113,29 +108,29 @@
   var count=0;
   var count_M=0;
   var count_L=0;
-  var count_R=0;
   var temp_r_L=0.0;
-  var temp_r_R=0.0;
+
   var r=0.0;
 
   //variable getting by manual measurement
+  var file_name;
   var pixel_to_mm;
-  var mannual_r_R;
   var mannual_r_L;
-  var x_p_L,y_p_L,x_p_R,y_p_R;//variable for drawing circle
+  var x_p_L,y_p_L;//variable for drawing circle
   var MRD_L=0.0;
   var MRD_R=0.0;
-  var mannual_MRD_R=0.0;
   var mannual_MRD_L=0.0;
 
-  var margin_L,margin_R;
+  var margin_L;
 
 
 
   var img_background
   var img_marker_background
   var img_left_background;
-  var img_right_background;
+
+
+
 
 
   img_original.onload=function(){
@@ -158,10 +153,18 @@
   //load input image and get eye and ruler
   let inputElement=document.getElementById('input')
   inputElement.onchange = function() {
+                          //get file Filenam
+                          processSelectedFiles(this)
                           //reload the img_original
                           img_original.src = URL.createObjectURL(event.target.files[0]);
-
                           }
+
+  //function to get file name
+  function processSelectedFiles(fileInput) {
+    var files = fileInput.files;
+    file_name=files[0].name;
+
+  }
 
 
   function msg(){

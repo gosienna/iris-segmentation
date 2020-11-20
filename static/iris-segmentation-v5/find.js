@@ -80,28 +80,6 @@ function find(edge){
     context.arc(result.center.x, result.center.y, result.radius, 0, 2 * Math.PI);
     context.stroke();
 
-    /*
-    //show result over the original image with predicted center
-    canvas = document.getElementById(final);
-    context = canvas.getContext('2d');
-    //draw original eye image as background
-    var img = document.getElementById(source);
-    context.drawImage(img,0,0,300,200);
-    console.log(img)
-    //draw iris edage
-    context.beginPath();
-    context.strokeStyle = "green";
-    context.arc(result.center.x, result.center.y, result.radius, 0, 2 * Math.PI);
-    context.stroke();
-
-    //draw predicted centered
-    context.beginPath();
-    context.arc(result.center.x, result.center.y, 2, 0, 2 * Math.PI);
-    context.fillStyle='red';
-    context.fill();
-    context.strokeStyle = 'red';
-    context.stroke();
-    */
     //calculate MRD
     var x=Math.trunc(result.center.x);
     var y=Math.trunc(result.center.y);
@@ -127,81 +105,54 @@ function find(edge){
       MRD_R=(y-top[1])*pixel_to_mm
       MRD_R=MRD_R.toFixed(2);
     }
-    /*
-    //show MRD value on picture
-    context.font = "15px Arial";
-    context.fillText(MRD.toString(), 30, 30);
-    var L=y-top[1];
-    context.fillText(L.toString(), 30, 60);
+
+    var c_final = document.getElementById("final_report");
+    var ctx_final = c_final.getContext('2d');
+    //clear the canvas before outputing result
+    ctx_final.fillStyle =  "black";
+    ctx_final.fillRect(0, 200, 600, 200);
+    //get imagedata from meausred data
+    var c_L=document.getElementById("left_eye");
+    var ctx_L=c_L.getContext('2d');
+    var img_L=ctx_L.getImageData(0,0,300,200)
+    ctx_final.putImageData(img_L,0,0);
+    //draw circle heart , auto
+    ctx_final.beginPath();
+    ctx_final.arc(x,y, 4, 0, 2 * Math.PI);
+    ctx_final.fillStyle =  "red";
+    ctx_final.fill();
     //draw MRD line
-    context.beginPath();
-    context.moveTo(x, y);
-    context.lineTo(top[0], top[1]);
-    context.strokeStyle = "#34ebe8";
-    context.stroke();
-    */
-    if(edge=="edge_L"){
-      var c_final = document.getElementById("final_report");
-      var ctx_final = c_final.getContext('2d');
-      //get imagedata from meausred data
-      var c_L=document.getElementById("left_eye");
-      var ctx_L=c_L.getContext('2d');
-      var img_L=ctx_L.getImageData(0,0,300,200)
-      ctx_final.putImageData(img_L,0,0);
-      //draw circle heart , auto
-      ctx_final.beginPath();
-      ctx_final.arc(x,y, 4, 0, 2 * Math.PI);
-      ctx_final.fillStyle =  "red";
-      ctx_final.fill();
-      //draw MRD line
-      ctx_final.beginPath();
-      ctx_final.moveTo(x, y);
-      ctx_final.lineTo(top[0], top[1]);
-      ctx_final.strokeStyle = "red";
-      ctx_final.stroke();
-      //draw measurement result
+    ctx_final.beginPath();
+    ctx_final.moveTo(x, y);
+    ctx_final.lineTo(top[0], top[1]);
+    ctx_final.strokeStyle = "red";
+    ctx_final.stroke();
+    //draw measurement result
+    ctx_final.font = "18px Arial";
+      //file file name
+    ctx_final.fillStyle = "white";
+    ctx_final.fillText("File ID: "+file_name,50,250)
 
-      ctx_final.font = "15px Arial";
-      ctx_final.fillStyle = "red";
-      ctx_final.fillText("Automatic MRD: "+MRD_L.toString(),50,250)
-      ctx_final.fillStyle = "#77f022";
-      mannual_MRD_L=mannual_MRD_L*pixel_to_mm;
-      mannual_MRD_L=mannual_MRD_L.toFixed(2);
-      ctx_final.fillText("Manual MRD: "+mannual_MRD_L.toString(),50,270)
+    ctx_final.fillStyle = "red";
+       //Automatic MRD
+    ctx_final.fillText("Automatic MRD: "+MRD_L.toString()+" mm",50,270)
+    ctx_final.fillStyle = "#77f022";
+    mannual_MRD_L=mannual_MRD_L*pixel_to_mm;
+    mannual_MRD_L=mannual_MRD_L.toFixed(2);
+       //manual MRD
+    ctx_final.fillText("Manual MRD: "+mannual_MRD_L.toString()+" mm",50,290)
+    var iris_diameter=2*temp_r_L*pixel_to_mm;
+    iris_diameter=iris_diameter.toFixed(2);
+       //mannual measured diameter of iris
+    ctx_final.fillStyle = "white";
+    ctx_final.fillText("Mannual Measured Iris Diameter: "+iris_diameter.toString()+" mm",50,310)
+    //draw img_marker_background
+    img_marker_background=ctx_M.getImageData(0,0,c_M.width,c_M.height);
+    ctx_final.putImageData(img_marker_background,300,0);
 
-    }else if(edge=="edge_R"){
-      var c_final = document.getElementById("final_report");
-      var ctx_final = c_final.getContext('2d');
-      //get imagedata from meausred data
-      var c_R=document.getElementById("right_eye");
-      var ctx_R=c_R.getContext('2d');
-      var img_R=ctx_R.getImageData(0,0,300,200)
-      ctx_final.putImageData(img_R,300,0);
-      //draw circle heart
-      ctx_final.beginPath();
-      ctx_final.arc(x+300,y, 4, 0, 2 * Math.PI);
-      ctx_final.fillStyle =  "red";
-      ctx_final.fill();
 
-      //draw MRD line
-      ctx_final.beginPath();
-      ctx_final.moveTo(x+300, y);
-      ctx_final.lineTo(top[0]+300, top[1]);
-      ctx_final.strokeStyle = "red";
-      ctx_final.stroke();
-      //draw measurement result
+    msg2();
 
-      ctx_final.font = "15px Arial";
-      ctx_final.fillStyle = "red";
-      ctx_final.fillText("Automatic MRD: "+MRD_R.toString(),50+300,250)
-      ctx_final.fillStyle = "#77f022";
-      mannual_MRD_R=mannual_MRD_R*pixel_to_mm;
-      mannual_MRD_R=mannual_MRD_R.toFixed(2)
-      ctx_final.fillText("Manual MRD: "+mannual_MRD_R.toString(),50+300,270)
-
-      //show the complete message
-      msg2();
-    }
 
 
 }

@@ -28,31 +28,28 @@ function move_window(event) {
 
 
           var s=width_original_img/width_img_display;
-          console.log(img_original.width,img_original.height,count);
+          //console.log(img_original.width,img_original.height,count);
           if(count==0){
             ctx_L.drawImage(img_original,x*s-s*width_capture_window/2,y*s-s*height_capture_window/2,s*width_capture_window,s*height_capture_window,0,0,300,200);
-          }
-          if(count==1){
-            ctx_R.drawImage(img_original,x*s-s*width_capture_window/2,y*s-s*height_capture_window/2,s*width_capture_window,s*height_capture_window,0,0,300,200);
-          }
-          if(count==2){
+          }else if(count==1){
             ctx_M.drawImage(img_original,x*s-s*width_capture_window/2,y*s-s*height_capture_window/2,s*width_capture_window,s*height_capture_window,0,0,300,200);
 
           }
 }
 
 function capture(event){
-          console.log("adf",count)
+
           if(count==0){
+            document.getElementById("btn_add").disabled = true;
+            document.getElementById("btn_sub").disabled = true;
             add_event_marker_measurement("left_eye")
             count=count+1;
           }else if(count==1){
-            add_event_marker_measurement("right_eye")
-            count=count+1;
-          }else if(count==2){
+            document.getElementById("btn_add").disabled = false;
+            document.getElementById("btn_sub").disabled = false;
             add_event_marker_measurement("marker")
             count=count+1;
-          }else if(count==3){
+          }else if(count==2){
             count=0;
           }
 
