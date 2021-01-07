@@ -31,6 +31,20 @@
 <body>
     <!--canvas display the source-->
     <div class="w3-center">
+        <div class="w3-left-align">
+        <p>
+          Instructions:<br>
+          Step 1:Choose photo<br>
+          Step 2:Choose target eye. You can adjust the window size by clicking on the + or - button<br>
+          Step 3:Choose marker.
+          Step 4:Click on the eye to track the contour of iris. 1st click start the tracing, 2nd click confirm the tracing<br>
+          Step 5:Click on the marker. 1st Click mark the left side end of the marker, 2nd click mark the right side end of the marker. The default
+           setting is that the marker is 1cm wide. If marker is not avalible, just randomly click two time on the marker picture.<br>
+          Step 6:After step 4,5. A button should appear. Click it to start the caluculation.
+        </p>
+        </div>
+    </div>
+    <div class="w3-center">
       <p id="status">loading.....</p>
     </div>
     <div class="w3-center">
@@ -71,6 +85,7 @@
     <div class="w3-center ">
         <canvas id="final_report" width="600", height="400" class="w3-round adjust-image"></canvas>
     </div>
+
 
 </body>
 
