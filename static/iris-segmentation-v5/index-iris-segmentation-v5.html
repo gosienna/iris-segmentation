@@ -22,7 +22,6 @@
 </head>
 <!-- Import TensorFlow.js -->
 <script src="loading.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js" onload="load_model()" ></script>
 
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <script src="add_event_window_capture.js"></script>
@@ -188,13 +187,13 @@
 
   }
 
-
   function msg(){
     var status=document.getElementById("status");
     status.style.webkitAnimationPlayState = 'paused'
     var status=document.getElementById("status");
     status.innerHTML="complete!"
   }
+
 
   function msg2(){
     var status=document.getElementById("status2");
@@ -229,3 +228,4 @@
 
 
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js" onload="load_model()" ></script>
