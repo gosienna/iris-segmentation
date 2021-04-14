@@ -141,7 +141,7 @@ function find(edge){
     mannual_MRD_L=mannual_MRD_L.toFixed(2);
        //manual MRD
     ctx_final.fillText("Manual MRD: "+mannual_MRD_L.toString()+" mm",50,290)
-    var iris_diameter=2*temp_r_L*pixel_to_mm;
+    iris_diameter=2*mannual_r_L*pixel_to_mm;
     iris_diameter=iris_diameter.toFixed(2);
        //mannual measured diameter of iris
     ctx_final.fillStyle = "white";
@@ -152,7 +152,8 @@ function find(edge){
 
 
     msg2();
-
+    var button_measure=document.getElementById("button_save");
+    button_measure.style.visibility="visible"
 
 
 }

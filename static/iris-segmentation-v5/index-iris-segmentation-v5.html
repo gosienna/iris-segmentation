@@ -37,7 +37,7 @@
           Step 1:Choose photo<br>
           Step 2:Choose target eye. You can adjust the window size by clicking on the + or - button<br>
           Step 3:Choose marker.
-          Step 4:Click on the eye to track the contour of iris. 1st click start the tracing, 2nd click confirm the tracing<br>
+          Step 4:Click on the eye to track the contour of iris. 1st click mark the first point over the edge of iris, 2nd click mark the second point over the edge of iris.<br>
           Step 5:Click on the marker. 1st Click mark the left side end of the marker, 2nd click mark the right side end of the marker. The default
            setting is that the marker is 1cm wide. If marker is not avalible, just randomly click two time on the marker picture.<br>
           Step 6:After step 4,5. A button should appear. Click it to start the caluculation.
@@ -85,6 +85,9 @@
     <div class="w3-center ">
         <canvas id="final_report" width="600", height="400" class="w3-round adjust-image"></canvas>
     </div>
+    <div class="w3-center ">
+        <button class="hide" id="button_save" style="width:150px" onclick="save()"><b>Save Results</b></button>
+    </div>
 
 
 </body>
@@ -123,7 +126,7 @@
   var count=0;
   var count_M=0;
   var count_L=0;
-  var temp_r_L=0.0;
+
 
   var r=0.0;
 
@@ -131,9 +134,9 @@
   var file_name;
   var pixel_to_mm;
   var mannual_r_L;
-  var x_p_L,y_p_L;//variable for drawing circle
+  var x1,y1,x2,y2,xm,ym,xc,yc;//variable for drawing circle, 1 first marker, 2, second marker, m, middle point, c, circle center
   var MRD_L=0.0;
-  var MRD_R=0.0;
+  var iris_diameter=0.0;
   var mannual_MRD_L=0.0;
 
   var margin_L;
@@ -209,6 +212,16 @@
 
   }
 
+  function save(){
+
+    var c_final = document.getElementById("final_report");
+    var link = document.createElement('a');
+    var file_ID=file_name+"_"+MRD_L.toString()+"_"+mannual_MRD_L.toString()+"_"+iris_diameter.toString();
+    link.download = file_ID+".png";
+    link.href = c_final.toDataURL()
+    link.click();
+    link.delete;
+  }
 
 
 </script>

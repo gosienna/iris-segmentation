@@ -50,24 +50,30 @@ function capture_M(event){
   }
 
 }
-
+//count_L==0 : mark first circle point
+//       ==1 : mark second circle point
+//       ==2 : draw circle on move, capture radius on click
 
 
 
 function capture_circle_L(event){
+
   if(count_L==0){
-    x_p_L=x;
-    y_p_L=y;
+    x1=event.layerX;
+    y1=event.layerY;
     count_L=count_L+1;
-  
+
   }else if(count_L==1){
-    x_p_L=(x+x_p_L)/2;
-    y_p_L=(y+y_p_L)/2;
+    x2=event.layerX;
+    y2=event.layerY;
+    xm=(x1+x2)/2;
+    ym=(y1+y2)/2;
     count_L=count_L+1;
-    mannual_r_L=temp_r_L;
     //console.log(x_p_L,y_p_L,count_L)
   }else if(count_L==2){
-    mannual_MRD_L=y_p_L-y;
+    count_L=count_L+1;
+  }else if(count_L==3){
+    mannual_MRD_L=yc-event.layerY;
     count_L=0
   }
 
@@ -75,42 +81,45 @@ function capture_circle_L(event){
 
 
 function draw_circle_L(event){
-  x = event.layerX;
-  y = event.layerY;
-  if(count_L==1){
+
+  if(count_L==2){
   ctx_L.putImageData(img_left_background,0,0)
-  temp_r_L=0.5*Math.sqrt(Math.pow(x-x_p_L,2)+Math.pow(y-y_p_L,2));
+
+  yc=event.layerY;
+  xc=-(yc-ym)*(y2-y1)/(x2-x1)+xm
+
+  mannual_r_L=Math.pow(Math.pow((x1-xc),2)+Math.pow((y1-yc),2),0.5);
   //draw circumfrence
   ctx_L.beginPath();
-  ctx_L.arc(x_p_L+(x-x_p_L)/2,y_p_L+(y-y_p_L)/2, temp_r_L, 0, 2 * Math.PI);
+  ctx_L.arc( xc,yc,mannual_r_L, 0, 2 * Math.PI);
   ctx_L.strokeStyle = "#77f022";
   ctx_L.stroke();
 
   //draw circle heart
   ctx_L.beginPath();
-  ctx_L.arc(x_p_L+(x-x_p_L)/2,y_p_L+(y-y_p_L)/2, 4, 0, 2 * Math.PI);
+  ctx_L.arc(xc,yc, 4, 0, 2 * Math.PI);
   ctx_L.fillStyle =  "#77f022";
   ctx_L.fill();
-}else if(count_L==2){
+}else if(count_L==3){
   //redraw circumfrence and circle heart
   //backgrounad
   ctx_L.putImageData(img_left_background,0,0)
   //circumfrence
   ctx_L.beginPath();
 
-  ctx_L.arc(x_p_L,y_p_L,mannual_r_L, 0, 2 * Math.PI);
+  ctx_L.arc(xc,yc,mannual_r_L, 0, 2 * Math.PI);
   ctx_L.strokeStyle = "#77f022";
   ctx_L.stroke();
   //heart
   ctx_L.beginPath();
-  ctx_L.arc(x_p_L,y_p_L, 4, 0, 2 * Math.PI);
+  ctx_L.arc(xc,yc, 4, 0, 2 * Math.PI);
   ctx_L.fillStyle =  "#77f022";
   ctx_L.fill();
 
   //draw MRD line
   ctx_L.beginPath();
-  ctx_L.moveTo(x_p_L, y_p_L);
-  ctx_L.lineTo(x_p_L, y);
+  ctx_L.moveTo(xc, yc);
+  ctx_L.lineTo(xc, event.layerY);
   ctx_L.strokeStyle = "#77f022";
   ctx_L.stroke();
   }
