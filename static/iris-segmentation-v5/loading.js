@@ -5,4 +5,3 @@ async function load_model(){
        msg();
 
      }
-load_model()
