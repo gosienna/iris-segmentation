@@ -1,8 +1,5 @@
 function add_event_marker_measurement(target){
 
-  img_marker_background=ctx_M.getImageData(0,0,c_M.width,c_M.height);
-  img_left_background=ctx_L.getImageData(0,0,c_L.width,c_L.height);
-
     if(target=="left_eye"){
       count_L=0;
       temp_r_L=0.0;
@@ -139,12 +136,15 @@ function draw_circle_L(event){
 //function to reset all measurement value
 function reset_iris(){
   ctx_L.putImageData(img_left_background,0,0)
+  count_L=0;
+
   var button_measure=document.getElementById("button_measure");
   button_measure.style.visibility="hidden"
 }
 
 function reset_marker(){
   ctx_M.putImageData(img_marker_background,0,0)
+  count_M=0;
 
   var button_measure=document.getElementById("button_measure");
   button_measure.style.visibility="hidden"

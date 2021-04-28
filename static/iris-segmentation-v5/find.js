@@ -147,8 +147,8 @@ function find(edge){
     ctx_final.fillStyle = "white";
     ctx_final.fillText("Mannual Measured Iris Diameter: "+iris_diameter.toString()+" mm",50,310)
     //draw img_marker_background
-    img_marker_background=ctx_M.getImageData(0,0,c_M.width,c_M.height);
-    ctx_final.putImageData(img_marker_background,300,0);
+    var img_marker=ctx_M.getImageData(0,0,c_M.width,c_M.height);
+    ctx_final.putImageData(img_marker,300,0);
 
 
     msg2();

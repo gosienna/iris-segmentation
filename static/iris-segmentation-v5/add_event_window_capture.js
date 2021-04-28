@@ -44,6 +44,8 @@ function capture(event){
             document.getElementById("btn_sub").disabled = true;
             add_event_marker_measurement("left_eye")
             count=count+1;
+            //capture the backgrounad
+            img_left_background=ctx_L.getImageData(0,0,c_L.width,c_L.height);
 
           }else if(count==1){
             document.getElementById("btn_add").disabled = false;
@@ -54,6 +56,9 @@ function capture(event){
             button_iris.style.visibility="visible"
             var button_marker=document.getElementById("button_reset_marker");
             button_marker.style.visibility="visible"
+            //capture the  backgrounad
+            img_marker_background=ctx_M.getImageData(0,0,c_M.width,c_M.height);
+
           }else if(count==2){
             count=0;
             var button_measure=document.getElementById("button_measure");
