@@ -61,11 +61,23 @@ function capture_circle_L(event){
   if(count_L==0){
     x1=event.layerX;
     y1=event.layerY;
+    //draw first mark over iris edge
+    ctx_L.beginPath();
+    ctx_L.arc(x1,y1, 2, 0, 2 * Math.PI);
+    ctx_L.fillStyle =  "#77f022";
+    ctx_L.fill();
+
     count_L=count_L+1;
 
   }else if(count_L==1){
     x2=event.layerX;
     y2=event.layerY;
+    //draw first mark over iris edge
+    ctx_L.beginPath();
+    ctx_L.arc(x2,y2, 2, 0, 2 * Math.PI);
+    ctx_L.fillStyle =  "#77f022";
+    ctx_L.fill();
+
     xm=(x1+x2)/2;
     ym=(y1+y2)/2;
     count_L=count_L+1;
@@ -123,4 +135,17 @@ function draw_circle_L(event){
   ctx_L.strokeStyle = "#77f022";
   ctx_L.stroke();
   }
+}
+//function to reset all measurement value
+function reset_iris(){
+  ctx_L.putImageData(img_left_background,0,0)
+  var button_measure=document.getElementById("button_measure");
+  button_measure.style.visibility="hidden"
+}
+
+function reset_marker(){
+  ctx_M.putImageData(img_marker_background,0,0)
+
+  var button_measure=document.getElementById("button_measure");
+  button_measure.style.visibility="hidden"
 }

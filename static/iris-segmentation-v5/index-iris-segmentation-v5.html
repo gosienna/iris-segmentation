@@ -73,6 +73,8 @@
         <canvas id="marker" width="300", height="200" class="w3-round adjust-image"></canvas>
     </div>
     <div class="w3-center ">
+        <button class="hide" id="button_reset_iris" style="width:150px" onclick="reset_iris()"><b>Reset iris measuremnt</b></button>
+        <button class="hide" id="button_reset_marker" style="width:150px" onclick="reset_marker()"><b>Reset marker measuremnt</b></button>
         <button class="hide" id="button_measure" style="width:100px" onclick="predict()"><b>Measure</b></button>
     </div>
     <div class="w3-center">
@@ -192,6 +194,10 @@
     status.style.webkitAnimationPlayState = 'paused'
     var status=document.getElementById("status");
     status.innerHTML="complete!"
+    var button_iris=document.getElementById("button_reset_iris");
+    button_iris.style.visibility="visible"
+    var button_marker=document.getElementById("button_reset_marker");
+    button_marker.style.visibility="visible"
   }
 
 
