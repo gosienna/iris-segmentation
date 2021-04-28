@@ -42,7 +42,7 @@ function capture_M(event){
     ctx_M.strokeStyle = "#77f022";
     ctx_M.stroke();
     margin_R=x;
-    pixel_to_mm=10/(margin_R-margin_L);
+    pixel_to_mm=Math.abs(10/(margin_R-margin_L));
 
     //Trigger point: reveal  the button for image processing
     var button_measure=document.getElementById("button_measure");
