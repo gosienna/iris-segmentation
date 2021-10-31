@@ -2,7 +2,7 @@ function get_edge(output,edge){
     //console.log(output,iris)
     let srcMat = cv.imread(output);
     cv.cvtColor(srcMat, srcMat, cv.COLOR_RGBA2GRAY, 0);
-    cv.threshold(srcMat, srcMat, 177, 255, cv.THRESH_BINARY);
+    cv.threshold(srcMat, srcMat, 80, 255, cv.THRESH_BINARY);
     let edgeMat = cv.Mat.zeros(srcMat.rows, srcMat.cols, cv.CV_8UC3);
     let contours = new cv.MatVector();
     let hierarchy = new cv.Mat();
