@@ -11,7 +11,7 @@ function get_edge(output,edge){
     contour_count=contours.size();
     for(i=0;i<contour_count;i++){
       cnt=contours.get(i);
-      if(cv.contourArea(cnt)>2000){ //set area threshold>1000
+      if(cv.contourArea(cnt)>1000){ //set area threshold>1000
         id_max_contour=i;
         console.log('area size:',cv.contourArea(cnt));
         console.log('id_max_contour',id_max_contour)
